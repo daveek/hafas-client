@@ -24,6 +24,7 @@ const {
 const testJourneysStationToStation = require('./lib/journeys-station-to-station')
 const testJourneysStationToAddress = require('./lib/journeys-station-to-address')
 const testJourneysStationToPoi = require('./lib/journeys-station-to-poi')
+const testJourneysWalkingSpeed = require('./lib/journeys-walking-speed')
 const testEarlierLaterJourneys = require('./lib/earlier-later-journeys')
 const testLegCycleAlternatives = require('./lib/leg-cycle-alternatives')
 const testRefreshJourney = require('./lib/refresh-journey')
@@ -127,6 +128,26 @@ test('journeys – fails with no product', (t) => {
 		toId: bismarckstr,
 		when,
 		products
+	})
+	t.end()
+})
+
+test('journeys: walkingSpeed', async (t) => {
+	const hallerstr = {
+		type: 'location',
+		address: '10587 Berlin-Charlottenburg, Hallerstr.',
+		latitude: 52.522326,
+		longitude: 13.32356
+	}
+
+	await testJourneysWalkingSpeed({
+		test: t,
+		journeys: client.journeys,
+		validate,
+		from: hallerstr,
+		to: bismarckstr,
+		products: {bus: false},
+		difference: 5 * 60 * 1000
 	})
 	t.end()
 })
