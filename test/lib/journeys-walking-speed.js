@@ -3,7 +3,7 @@
 const isRoughlyEqual = require('is-roughly-equal')
 
 const testJourneysWalkingSpeed = async (cfg) => {
-	const {test: t, journeys, validate, from, to, products, difference: dT} = cfg
+	const {test: t, journeys, validate, from, to, products, minTimeDifference} = cfg
 
 	const {journeys: journeysWithFastWalking} = await journeys(from, to, {
 		results: 1, products, walkingSpeed: 'fast'
@@ -22,7 +22,7 @@ const testJourneysWalkingSpeed = async (cfg) => {
 	t.ok(isRoughlyEqual(100, fastDist, slowDist), 'precondition failed')
 	const fastDur = new Date(legWithFastWalking.arrival) - new Date(legWithFastWalking.departure)
 	const slowDur = new Date(legWithSlowWalking.arrival) - new Date(legWithSlowWalking.departure)
-	t.notOk(isRoughlyEqual(dT, fastDur, slowDur), 'walkingSpeed not applied')
+	t.notOk(isRoughlyEqual(minTimeDifference, fastDur, slowDur), 'walkingSpeed not applied')
 	t.end()
 }
 
