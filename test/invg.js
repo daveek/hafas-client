@@ -174,16 +174,26 @@ test('trip details', async (t) => {
 })
 
 test('departures at Ingolstadt Hbf', async (t) => {
-	const departures = await client.departures(ingolstadtHbf, {
+	const ids = [
+		ingolstadtHbf, // station
+		'80301', // stop "Ingolstadt, Hauptbahnhof Stadtauswärts"
+		'80302' // stop "Ingolstadt, Hauptbahnhof Stadteinwärts"
+	]
+
+	const deps = await client.departures(ingolstadtHbf, {
 		duration: 10, when
 	})
 
-	await testDepartures({
-		test: t,
-		departures,
-		validate,
-		id: ingolstadtHbf
-	})
+	validate(t, deps, 'departures', 'departures')
+	t.ok(deps.length > 0, 'must be >0 departures')
+	// todo: move into deps validator
+	t.deepEqual(deps, deps.sort((a, b) => t.when > b.when))
+
+	for (let i = 0; i < deps.length; i++) {
+		const dep = deps[i]
+		t.ok(ids.includes(dep.stop.id), `deps[${i}].stop.id ("${dep.stop.id}") is invalid`)
+	}
+
 	t.end()
 })
 
@@ -204,16 +214,26 @@ test('departures with station object', async (t) => {
 })
 
 test('arrivals at Ingolstadt Hbf', async (t) => {
-	const arrivals = await client.arrivals(ingolstadtHbf, {
+	const ids = [
+		ingolstadtHbf, // station
+		'80301', // stop "Ingolstadt, Hauptbahnhof Stadtauswärts"
+		'80302' // stop "Ingolstadt, Hauptbahnhof Stadteinwärts"
+	]
+
+	const arrs = await client.arrivals(ingolstadtHbf, {
 		duration: 10, when
 	})
 
-	await testArrivals({
-		test: t,
-		arrivals,
-		validate,
-		id: ingolstadtHbf
-	})
+	validate(t, arrs, 'arrivals', 'arrivals')
+	t.ok(arrs.length > 0, 'must be >0 arrivals')
+	// todo: move into arrs validator
+	t.deepEqual(arrs, arrs.sort((a, b) => t.when > b.when))
+
+	for (let i = 0; i < arrs.length; i++) {
+		const arr = arrs[i]
+		t.ok(ids.includes(arr.stop.id), `arrs[${i}].stop.id ("${arr.stop.id}") is invalid`)
+	}
+
 	t.end()
 })
 
