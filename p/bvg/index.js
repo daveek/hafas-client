@@ -108,6 +108,8 @@ const bvgProfile = {
 	trip: true,
 	radar: true,
 	journeysWalkingSpeed: true,
+	departuresGetPasslist: false,
+	departuresStbFltrEquiv: false,
 	refreshJourney: true,
 	reachableFrom: true
 }
